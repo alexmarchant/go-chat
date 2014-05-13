@@ -4,10 +4,11 @@ import (
   "net/http"
   "io/ioutil"
   "fmt"
-  "strconv"
-  "html/template"
   "log"
+  "os"
 )
+
+var wd string
 
 func configLogger() {
   log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
@@ -56,10 +57,17 @@ func getHtmlFile(filename string) (html string, err error) {
   return
 }
 
+func sourceHandler(w http.ResponseWriter, r *http.Request) {
+  http.ServeFile(w, r, r.URL.Path[1:])
+}
+
 func main() {
+  wd,_ = os.Getwd()
   configLogger()
   http.HandleFunc("/", landingPage)
   http.HandleFunc("/chats/", showChatPage)
   http.HandleFunc("/chats/new", newChatPage)
+  http.HandleFunc("/js/", sourceHandler)
+  http.HandleFunc("/css/", sourceHandler)
   http.ListenAndServe(":8080", nil)
 }
