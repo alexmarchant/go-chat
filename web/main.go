@@ -29,7 +29,7 @@ func landingPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func showChatPage(w http.ResponseWriter, r *http.Request) {
-  html, err := getHtmlFile("index.html")
+  html, err := getHtmlFile("chat.html")
   if err != nil {
     http.NotFound(w, r)
     return
@@ -39,14 +39,7 @@ func showChatPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func newChatPage(w http.ResponseWriter, r *http.Request) {
-  c, err := newChat()
-  m := newMessage("Server", "Welcome!")
-  c.addMessage(m)
-  if err != nil {
-    internalServerError(w, r, err)
-    return
-  }
-  path := fmt.Sprintf("/chats/%v", c.Id)
+  path := fmt.Sprintf("/chats/%v", 1)
   http.Redirect(w, r, path, 307)
   return
 }
