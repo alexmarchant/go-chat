@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
-var connection = new WebSocket('ws://localhost:8080/ws');
+var host = document.location.host;
+var connection = new WebSocket('ws://' + host + '/ws');
 
 var MessageList = React.createClass({
   render: function() {
@@ -18,10 +19,11 @@ var MessageList = React.createClass({
 
 var ChatApp = React.createClass({
   getInitialState: function() {
+    var randomId = getRandomInt(1, 1000000);
     return {
       messages: [{id: 0, author: "Server", body: "Welcome!"}],
-      authorName: "Junior",
-      authorId: getRandomInt(1, 1000000),
+      authorName: randomId,
+      authorId: randomId,
       currentMessageBody: "",
     };
   },
@@ -72,6 +74,9 @@ var ChatApp = React.createClass({
   currentMessageBodyChange: function(e) {
     this.setState({currentMessageBody: e.target.value});
   },
+  authorNameChange: function(e) {
+    this.setState({authorName: e.target.value});
+  },
   render: function () {
     return (
       <div>
@@ -83,7 +88,12 @@ var ChatApp = React.createClass({
         </div>
         <form onSubmit={this.handleSubmit}>
           <p>
-            <input type="text" name="message" placeholder="Type text here" onChange={this.currentMessageBodyChange} value={this.state.currentMessageBody} />
+            <label>Name: </label>
+            <input type="text" name="authorName" onChange={this.authorNameChange} value={this.state.authorName} />
+          </p>
+          <p>
+            <label>Message: </label>
+            <input type="text" name="message" onChange={this.currentMessageBodyChange} placeholder="Type here!" value={this.state.currentMessageBody} />
           </p>
           <p>
             <input type="submit" value="Submit" />
