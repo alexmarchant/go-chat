@@ -6,5 +6,6 @@ ssh -t -t root@162.243.248.235 <<'ENDSSH'
   cd /var/www/go-chat
   git pull origin master
   go build
-  ./go-chat & disown
+  ./go-chat 80 & disown
+  exit
 ENDSSH

@@ -9,10 +9,21 @@ import (
 	"log"
 	"net/http"
 	"text/template"
+  "os"
 )
 
-var addr = flag.String("addr", ":8080", "http service address")
+var port string
+var addr *string
 var homeTempl = template.Must(template.ParseFiles("views/chat.html"))
+
+func parseCli() {
+  if len(os.Args) <= 1 {
+    port = "8080"
+	} else {
+    port = os.Args[1] 
+  }
+  addr = flag.String("addr", ":" + port, "http service address")
+}
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -32,6 +43,7 @@ func sourceHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+  parseCli()
 	flag.Parse()
 	go h.run()
 	http.HandleFunc("/", serveHome)
